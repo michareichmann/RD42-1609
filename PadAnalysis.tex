@@ -125,87 +125,100 @@
 \subsection{Waveforms}
 \begin{frame}
 	\frametitle{Waveforms}
+	\vspace*{-20pt}
 	\begin{center}
-		\includegraphics[angle=270, width=.8\textwidth]{WFStack}\\
-		\includegraphics[angle=270, width=.8\textwidth]{Waveform}\\
+		\includegraphics[angle=270, width=.7\textwidth]{SignalWaveform}\\
+		\includegraphics[angle=270, width=.7\textwidth]{SignalWaveforms20000}\\
 	\end{center}
 	\begin{itemize}
-		\item most frequented peak: triggered signal
-		\item other peaks signal from other bunches
-		\item no signals in pre-signal bucket due to fastOR deadtime
+		\item most frequented peak (\SI{\approx130}{ns}): triggered signal
+		\item other peaks originate from other buckets ($\rightarrow$ resolve beam structure of \SI{\approx19.7}{ns})
+		\item system does not allow signals in pre-signal bucket due to fastOR trigger deadtime
 	\end{itemize}
-\end{frame}
-% new frame =======================
-\begin{frame}
-	\frametitle{Peak Positions}
-	\begin{center}
-		\includegraphics[angle=270, width=.8\textwidth]{PeakTimings}\\
-	\end{center}
-	\begin{itemize}
-		\item determine beam structure: $\approx$ \SI{19.7}{ns} distance between the peaks
-		\begin{itemize}
-			\item exactly the time distance between the bunches of the PSI beam
-		\end{itemize}
-		\item approximate particle flux by the number of peaks
-		\begin{itemize}
-			\item good agreement to trigger measurements
-		\end{itemize}
-	\end{itemize}
-
 \end{frame}
 % new frame =======================
 \begin{frame}
 	\frametitle{Pulse Height Calculation}
 	\begin{center}
-		\includegraphics[angle=270, width=.8\textwidth]{PeakInt}\\
+		\includegraphics[angle=270, width=.8\textwidth]{IntegralPeaks}\\
 	\end{center}
 	\begin{itemize}
 		\setlength{\itemsep}{\fill}
-		\item finding the peak in the signal region
-		\item signal integral
+		\item finding the peak in the signal region (bucket 0)
+		\item integrating the signal in given intervals around the found peak
+		\item integrating the pedestal (base line $\rightarrow$ noise)
 		\begin{itemize}
-			\item waveform in a fixed time window around the peak
+			\item using same intervals as for the signal in fixed position in bucket -1 (signals forbidden!)
 		\end{itemize}
-		\item pedestal (base line) integral
+		\item optimizing the final interval by highest SNR (Integral / Pedestal Sigma)
+		\item subtracting the pedestal from the signal integral on event-wise basis 
+	\end{itemize}
+\end{frame}
+% new frame =======================
+\begin{frame}
+	\frametitle{Timing Correction}
+	\begin{itemize}
+		\item ring buffer cells of the digitizer have different sizes (\SI[separate-uncertainty = true]{\approx.5\pm.15}{ns})
+		\item effective timing depends on starting cell of the buffer (=trigger cell)
+		\item use trigger cell and measured cell length to get precise timing
+	\end{itemize}
+	\begin{minipage}{5.0cm}
+		\centering
+		\includegraphics[angle=270, width=5cm]{TCVSPP}
+	\end{minipage}
+	\begin{minipage}{1.5cm}
+		\centering
+		Timing Correction\\
+		$\longrightarrow$
+	\end{minipage}
+	\begin{minipage}{5.0cm}
+		\centering
+		\includegraphics[angle=270, width=5cm]{TCVSPPCorr}
+	\end{minipage}
+\end{frame}
+% new frame =======================
+\begin{frame}
+	\frametitle{Corrected Timing of the Signal Peaks}
+	\vspace*{-20pt}
+	\begin{center}
+		\includegraphics[angle=270, width=6cm]{SigPeakPos}\\
+	\end{center}
+	\begin{itemize}
+		\item timing follows Gaussian distribution with $\upsigma=$ \SI[separate-uncertainty = true]{1.31\pm.03}{ns}
+		\item use cut (\SI{4}{\upsigma}) based on this distribution to discard events with wrong timing 
 		\begin{itemize}
-			\item integration of the bucket before the peak with the same size
+			\item overlay of different buckets
 		\end{itemize}
-		\item window optimised to highest SNR (Integral / Pedestal Sigma)
-		\item integral subtracted by pedestal value 
 	\end{itemize}
 \end{frame}
 % ============================
 \subsection{Event Cuts}
 \begin{frame}
 	\frametitle{Event Cuts}
-	\begin{minipage}[c][.7\textheight]{7cm}
+	\begin{minipage}[c][.8\textheight]{7cm}
 		\underline{\textbf{Exclude events:}}\s
 		\begin{itemize}
 			\small
 			\setlength{\itemsep}{\fill}
 			\item saturated: with saturated waveforms
 			\item pulser: reference events 
-			\item event\_range: first five minutes
-			\item beam\_interrupts: beam is down
-			\item ped\_sigma: uncommon pedestal events (outside 3 sigma)
 			\item tracks: with incomplete tracks
-			\item chi2: bad track fits 
-			\begin{itemize}
-				\item $90$\% quantile in x and y
-			\end{itemize}
-			\item track\_angle: too large track angles
-			\begin{itemize}
-				\item abs(\SI{2}{deg})
-			\end{itemize}
-			\item timing: not within 4 sigma of peak timing
-			\item bucket: signal in wrong bucket
+			\item timing
+			\item fiducial: track not in selected area of the diamond
+		\end{itemize}
+		\vspace*{1cm}
+		\underline{\textbf{Also cuts on:}}\s
+		\begin{itemize}
+			\item $\upchi^{2}$ in $x$ and $y$, track angle, event range, pedestal sigma
 		\end{itemize}
 	\end{minipage}
 	\hspace*{2pt}
 	\begin{minipage}{4cm}
 		\centering
-		\includegraphics[angle=270, width=3.5cm]{consecutive398}\\
-		\includegraphics[angle=270, width=3.5cm]{consecutive_logy398}
+		S129\\
+		\vspace*{-5pt}
+		\includegraphics[angle=270, width=3.4cm]{Consecutive807}\\
+		\includegraphics[angle=270, width=3.4cm]{ConsecutiveLog807}
 	\end{minipage}
 \end{frame}
 % new frame =======================
@@ -218,120 +231,180 @@
 	\hspace*{2pt}
 	\begin{minipage}{6.5cm}
 		\centering
-		\includegraphics[angle=270, width=6.0cm]{CutMeans}
+		\includegraphics[angle=270, width=3.0cm]{CutMeans}
 	\end{minipage}
 	\begin{minipage}{6cm}
 		\begin{itemize}
-			\item pedestal is completely gone after application of the cuts 
-			\item wide Landau due to polycrystalline diamonds
+			\item pedestal almost completely gone after application of the cuts 
 			\item mean of the pulse height increases significantly due to cuts (pedestal goes away)
 		\end{itemize}
 	\end{minipage}
 	\hspace*{2pt}
 	\begin{minipage}{5cm}
 		\centering
-		\includegraphics[width=4cm]{Cuts}
+		\includegraphics[angle=270, width=4cm]{Cuts}
 	\end{minipage}
 \end{frame}
-% ============================
-\subsection{Signal Map}
-\begin{frame}
-	\frametitle{Signal Map}
-	\begin{center}
-		\includegraphics[angle=270, width=5.5cm]{SignalMap}\\
-	\end{center}
-	\begin{itemize}
-		\item different regions inside the diamond yield different average pulse heights
-		\item does not change with rate or time
-	\end{itemize}
-\end{frame}
+% % ============================
+% \subsection{Signal Map}
+% \begin{frame}
+% 	\frametitle{Signal Map}
+% 	\begin{center}
+% 		\includegraphics[angle=270, width=5.5cm]{SignalMap}\\
+% 	\end{center}
+% 	\begin{itemize}
+% 		\item different regions inside the diamond yield different average pulse heights
+% 		\item does not change with rate or time
+% 	\end{itemize}
+% \end{frame}
 % END
 % ====================================================================================
 % BEGIN RESULTS
 % ====================================================================================
-\section{Results}
+\section{Preliminary Results}
 % ============================
-\subsection{S129 (Element Six - single crystal)}
+\subsection{S129 (elementsix - single crystal)}
 \begin{frame}
-	\frametitle{$+$\SI{500}{V} August - unirradiated}
-	\begin{minipage}{5.5cm}
+	\frametitle{S129 @ $-$\SI{500}{V} - unirradiated}
+	\def \sp {3.7cm}
+	\begin{minipage}{\sp}
 		\centering
-		\includegraphics[width=5cm]{PHS41}
+		October 2015 
+		\includegraphics[width=\sp]{CPH1608_03}\\
+		noise $\upsigma\approx$ \SI{2.6}{au}
 	\end{minipage}
 	\hspace*{2pt}
-	\begin{minipage}{5.5cm}
+	\begin{minipage}{\sp}
 		\centering
-		\includegraphics[width=5cm]{PHSZ41}
+		August 2016 - begin
+		\includegraphics[width=\sp]{CPH1510_08_1}\\
+		noise $\upsigma\approx$ \SI{2.6}{au}
+	\end{minipage}
+	\hspace*{2pt}
+	\begin{minipage}{\sp}
+		\centering
+		August 2016 - end
+		\includegraphics[width=\sp]{CPH1510_18_1}\\
+		noise $\upsigma \approx$ \SI{2.6}{au}
 	\end{minipage}\s
 	\begin{itemize}
-		\item amplifier issues during the last two runs
+		\item measurements taken under the same conditions
+		\item noise stays the same
+		\item pulse height very stable
+	\end{itemize}
+\end{frame}
+% ============================
+\subsection{II6-B2 (II-VI - poly crystal)}
+\begin{frame}
+	\frametitle{II6-B2 @ $-$\SI{1000}{V}}
+	\begin{minipage}{3.7cm}
+		\centering
+		August 2016 - \\unirradiated
+		\includegraphics[width=3.7cm]{CPH1508_13_2.pdf}\\
+		noise $\upsigma\approx$ \SI{4.9}{au}
+	\end{minipage}
+	\hspace*{2pt}
+	\begin{minipage}{3.7cm}
+		\centering
+		October 2015 - \SI[exponent-product = \cdot]{5e14}{n/cm^{2}}
+		\includegraphics[width=3.7cm]{CPH1510_08_2.pdf}\\
+		noise $\upsigma\approx$ \SI{4.9}{au}
+	\end{minipage}
+	\hspace*{2pt}
+	\begin{minipage}{3.7cm}
+		\centering
+		August 2016 - \SI[exponent-product = \cdot]{1e15}{n/cm^{2}}
+		\includegraphics[width=3.7cm]{CPH1608_09_1_2.pdf}\\
+		noise $\upsigma \approx$ \SI{4.9}{au}
+	\end{minipage}\s
+	\begin{itemize}
+		\item pulse height very stable after irradiation
+		\item noise stays the same
 	\end{itemize}
 \end{frame}
 % new frame =======================
 \begin{frame}
-	\frametitle{$-$\SI{500}{V} October - unirradiated}
-	\begin{minipage}{5.5cm}
+	\begin{minipage}{3.1cm}
 		\centering
-		\includegraphics[width=5cm]{PHS03}
+		August 2016 - \\unirradiated
+		\includegraphics[angle=270, width=3.1cm]{SD462}\\
+		\includegraphics[angle=270, width=3.1cm]{SM462}
 	\end{minipage}
 	\hspace*{2pt}
-	\begin{minipage}{5.5cm}
+	\begin{minipage}{3.1cm}
 		\centering
-		\includegraphics[width=5cm]{PHSZ03}
+		October 2015 - \SI[exponent-product = \cdot]{5e14}{n/cm^{2}}
+		\includegraphics[angle=270, width=3.1cm]{SD392}\\
+		\includegraphics[angle=270, width=3.1cm]{SM392}
 	\end{minipage}
+	\hspace*{2pt}
+	\begin{minipage}{3.1cm}
+		\centering
+		August 2016 - \SI[exponent-product = \cdot]{1e15}{n/cm^{2}}
+		\includegraphics[angle=270, width=3.1cm]{SD555}\\
+		\includegraphics[angle=270, width=3.1cm]{SM555}
+	\end{minipage}\s
 \end{frame}
-% new frame =======================
+% ============================
+\subsection{II6-94 and II6-95 (II-VI - poly crystal}
 \begin{frame}
-	\frametitle{$+$\SI{500}{V} October - unirradiated}
-	\begin{minipage}{5.5cm}
+	\frametitle{II6-94 and II6-95 @ $-$\SI{1000}{V}}
+	\centering
+	\begin{minipage}{2.7cm}
 		\centering
-		\includegraphics[width=5cm]{PHS05}
+		II6-94 - \\unirradiated
+		\includegraphics[width=2.7cm]{CPH1608_14_1}\\
+		noise $\upsigma\approx$ \SI{5.7}{au}\\
+		\includegraphics[angle=270, width=2.7cm]{SD698}
 	\end{minipage}
 	\hspace*{2pt}
-	\begin{minipage}{5.5cm}
+	\begin{minipage}{2.7cm}
 		\centering
-		\includegraphics[width=5cm]{PHSZ05}
+		II6-95 - \SI[exponent-product = \cdot]{5e14}{n/cm^{2}}
+		\includegraphics[width=2.7cm]{CPH1608_09_1}\\
+		noise $\upsigma\approx$ \SI{4.7}{au}\\
+		\includegraphics[angle=270, width=2.7cm]{SD555_2}
 	\end{minipage}
 \end{frame}
 % ============================
-\subsection{Poly-B2 (II-IV B2 - poly crystal)}
+\subsection{SiD1 (PSI - silicon diode}
 \begin{frame}
-	\frametitle{$+$\SI{1000}{V} August - unirradiated}
+	\frametitle{SiD1}
+	\def \sp {4.2cm}
 	\begin{minipage}{5.5cm}
 		\centering
-		\includegraphics[width=5cm]{PH02}
+		Signal Pulse Height
+		\includegraphics[angle=270, width=\sp]{PVS19}
 	\end{minipage}
 	\hspace*{2pt}
 	\begin{minipage}{5.5cm}
 		\centering
-		\includegraphics[width=5cm]{PHZ02}
-	\end{minipage}
+		Pulser Pulse Height
+		\includegraphics[angle=270, width=\sp]{SVC19}
+	\end{minipage}\s
+	\begin{itemize}
+		\item signal supposed to saturate at \SI{\approx80}{V}
+		\item pulser saturates at expected value
+		\item try to use it as calibration to extract CCD of diamonds did not succeed (deviation of \SI{\approx15}{\%})
+	\end{itemize}
 \end{frame}
 % new frame =======================
 \begin{frame}
-	\frametitle{$-$\SI{1000}{V} August - unirradiated}
+	\def \sp {5cm}
 	\begin{minipage}{5.5cm}
 		\centering
-		\includegraphics[width=5cm]{PH13}
+		Signal Map
+		\includegraphics[angle=270, width=\sp]{SiD1SM}
 	\end{minipage}
 	\hspace*{2pt}
 	\begin{minipage}{5.5cm}
 		\centering
-		\includegraphics[width=5cm]{PHZ13}
-	\end{minipage}
-\end{frame}
-% new frame =======================
-\begin{frame}
-	\frametitle{$-$\SI{1000}{V} October - irradiated}
-	\begin{minipage}{5.5cm}
-		\centering
-		\includegraphics[width=5cm]{PH81}
-	\end{minipage}
-	\hspace*{2pt}
-	\begin{minipage}{5.5cm}
-		\centering
-		\includegraphics[width=5cm]{PHZ81}
-	\end{minipage}
+		Rate Scan
+		\includegraphics[width=\sp]{CPH1608_18_1_2}
+	\end{minipage}\s
+	\begin{itemize}
+		\item pulse height very flat with rate $\rightarrow$ no rate dependence
+	\end{itemize}
 \end{frame}
 % END 
 % ====================================================================================
@@ -343,11 +416,16 @@
 	\frametitle{Conclusion}
 	\begin{itemize}
 		\setlength{\itemsep}{\fill}
-		\item very good timing resolution with scintillator allows for precise integration and separation of the signal
-		\item tested several diamond pad detectors with fluxes between \SI{1}{kHz/cm^{2}} and \SI{10}{MHz/cm^{2}}
+		\item very good timing resolution with scintillator allows for precise integration and separation of the signals
+		\item tests in August 2016 are compatible with the beam test before
 		\item unirradiated single crystal shows almost no rate dependence
-		\item most of the polies behave similarly
-		\item some of the diamond pad detectors have only a very slight ($1-3$\%) rate dependence after irradiation
+		\begin{itemize}
+			\item good reference
+		\end{itemize}
+		\item behaviour of silicon diode not yet understood
+		\begin{itemize}
+			\item yet very stable with rate
+		\end{itemize}
 	\end{itemize}
 \end{frame}
 % ====================================================================================
@@ -357,20 +435,12 @@
 % ============================
 \begin{frame}
 	\frametitle{Outlook}
-	\underline{\textbf{Event Synchroniser:}}
 	\begin{itemize}
 		\setlength{\itemsep}{\fill}
-		\item fix unsynchronous runs (event misalignment)
-		\item using pulser reference runs to check alignment
-		\item writing program to detect and realign the runs
-	\end{itemize}
-	\vspace*{10pt}
-	\underline{\textbf{Finish Analysis:}}
-	\begin{itemize}
-		\setlength{\itemsep}{\fill}
-		\item vary and confirm cuts 
-		\item create all final plots
-		\item make a final presentation
+		\item irradiate II6-B2 further 
+		\item find other stable poly-crystalline diamonds
+		\item investigate behaviour of silicon diode
+		\item build and test further silicon diode
 	\end{itemize}
 \end{frame}
 % ============================
